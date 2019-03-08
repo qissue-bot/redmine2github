@@ -2,6 +2,7 @@ from __future__ import print_function
 import os
 import sys
 import json
+import time
 
 
 if __name__=='__main__':
@@ -454,6 +455,8 @@ class GithubIssueMaker:
             comment_obj = None
             try:
                 comment_obj = self.get_comments_service().create(issue_num, comment_info)
+                msgt('sleep 2 seconds....')
+                time.sleep(2)
             except requests.exceptions.HTTPError as e:
                 msgt('Error creating comment: %s' % e.message)
                 continue

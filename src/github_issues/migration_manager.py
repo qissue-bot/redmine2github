@@ -76,7 +76,7 @@ class MigrationManager:
         if not type(self.redmine_issue_start_number) is int:
             msgx('ERROR: The start issue number is not an integer [%s]' % self.redmine_issue_start_number)                
 
-        if not type(self.redmine_issue_end_number) in (None, int):
+        if not (self.redmine_issue_end_number is None or type(self.redmine_issue_end_number) is int):
             msgx('ERROR: The end issue number must be an integer of None [%s]' % self.redmine_issue_end_number)                
             
             if type(self.redmine_issue_end_number) is int:
@@ -205,12 +205,12 @@ class MigrationManager:
                 mapping_dict.update({ redmine_issue_num : github_issue_number})
                 self.save_dict_to_file(mapping_dict)
         
-            if issue_cnt % 50 == 0:
-                msgt('sleep 1 seconds....')
-                time.sleep(1)
+            # if issue_cnt % 50 == 0:
+            msgt('sleep 1 seconds....')
+            time.sleep(1)
 
 if __name__=='__main__':
-    json_input_directory = os.path.join(REDMINE_ISSUES_DIRECTORY, '2014-1224')
+    json_input_directory = os.path.join(REDMINE_ISSUES_DIRECTORY, '2019-0307')
 
     kwargs = dict(include_comments=True\
                 , redmine_issue_start_number=1\
