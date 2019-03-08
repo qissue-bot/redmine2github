@@ -307,6 +307,7 @@ class GithubIssueMaker:
 
         include_comments = kwargs.get('include_comments', True)
         include_assignee = kwargs.get('include_assignee', True)
+        include_attachments = kwargs.get('include_attachments', True)
 
         json_str = open(redmine_json_fname, 'rU').read()
         rd = json.loads(json_str)       # The redmine issue as a python dict
@@ -321,6 +322,10 @@ class GithubIssueMaker:
 
         author_name = rd.get('author', {}).get('name', None)
         author_github_username = self.format_name_for_github(author_name)
+        attachments = []
+
+        if include_attachments:
+            attachments = rd.get('attachments')
 
         desc_dict = {'description' : translate_for_github(rd.get('description', 'no description'))\
                     , 'redmine_link' : self.format_redmine_issue_link(rd.get('id'))\
@@ -328,7 +333,8 @@ class GithubIssueMaker:
                     , 'start_date' : rd.get('start_date', None)\
                     , 'author_name' : author_name\
                     , 'author_github_username' : author_github_username\
-                    , 'redmine_assignee' : self.get_redmine_assignee_name(rd)
+                    , 'redmine_assignee' : self.get_redmine_assignee_name(rd)\
+                    , 'attachments' : attachments
         }
 
         description_info = template.render(desc_dict)
@@ -377,7 +383,7 @@ class GithubIssueMaker:
         if include_comments:
             journals = rd.get('journals', None)
             if journals:
-                self.add_comments_for_issue(issue_obj.number, journals)
+                self.add_comments_for_issue(issue_obj.number, journals, attachments)
 
 
         #
@@ -410,7 +416,7 @@ class GithubIssueMaker:
 
 
 
-    def add_comments_for_issue(self, issue_num, journals):
+    def add_comments_for_issue(self, issue_num, journals, attachments):
         """
         Add comments
         """
@@ -427,11 +433,21 @@ class GithubIssueMaker:
 
             author_name = j.get('user', {}).get('name', None)
             author_github_username = self.format_name_for_github(author_name)
+            comment_attachments = []
+
+            # Find attachments that were added with this comment
+            for d in j.get('details'):
+                if d.get('property') == 'attachment':
+                    attachment = next((x for x in attachments if str(x.get('id')) == d.get('name')), None)
+
+                    if attachment is not None:
+                        comment_attachments.append(attachment)
 
             note_dict = { 'description' : translate_for_github(notes)\
                          , 'note_date' : j.get('created_on', None)\
                          , 'author_name' : author_name\
                          , 'author_github_username' : author_github_username\
+                         , 'attachments' : comment_attachments\
                          }
             comment_info =  comment_template.render(note_dict)
 

@@ -10,5 +10,9 @@
 
 {{ description }}
 
-
-
+{% if attachments|length > 0 -%}
+---
+{% for attachment in attachments %}
+- [{{ attachment.filename }}]({{ attachment.content_url }}) ({{ attachment.author.name }})
+{%- endfor %}
+{%- endif %}

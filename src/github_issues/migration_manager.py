@@ -28,6 +28,7 @@ class MigrationManager:
         
         self.include_comments = kwargs.get('include_comments', True)
         self.include_assignee = kwargs.get('include_assignee', True)
+        self.include_attachments = kwargs.get('include_attachments', True)
 
 
         self.user_mapping_filename = kwargs.get('user_mapping_filename', None)
@@ -196,6 +197,7 @@ class MigrationManager:
             json_fname_fullpath = os.path.join(self.redmine_json_directory, json_fname)
             gm_kwargs = { 'include_assignee' : self.include_assignee \
                          , 'include_comments' : self.include_comments \
+                         , 'include_attachments' : self.include_attachments \
                         }
             github_issue_number = gm.make_github_issue(json_fname_fullpath, **gm_kwargs)
         
@@ -215,6 +217,7 @@ if __name__=='__main__':
                 , redmine_issue_end_number=5000\
                 #, user_mapping_filename=USER_MAP_FILE       # optional
                 , include_assignee=False    # Optional. Assignee must be in the github repo and USER_MAP_FILE above
+                , include_attachments=True                  # optional
                 , label_mapping_filename=LABEL_MAP_FILE     # optional
                 #, milestone_mapping_filename=MILESTONE_MAP_FILE # optional
             )

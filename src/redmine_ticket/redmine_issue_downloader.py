@@ -280,7 +280,7 @@ print (data['total_count'])
         :returns: json string with issue information
         """
         # test using .issue.get
-        issue = self.redmine_conn.issue.get(issue_id, include='children,journals,watchers,relations')
+        issue = self.redmine_conn.issue.get(issue_id, include='children,attachments,journals,watchers,relations')
         json_str = json.dumps(issue._attributes, indent=4)
         msg('Issue retrieved: %s' % issue_id)
         return json_str
