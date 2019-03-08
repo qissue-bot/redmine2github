@@ -59,3 +59,7 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+.history
+.vscode
+r2g_env
+

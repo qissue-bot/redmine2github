@@ -314,7 +314,7 @@ class GithubIssueMaker:
         rd = json.loads(json_str)       # The redmine issue as a python dict
 
         #msg(json.dumps(rd, indent=4))
-        msg('Attempt to create issue: [#%s][%s]' % (rd.get('id'), rd.get('subject') ))
+        msg('Attempt to create issue: [#%s][%s]' % (rd.get('id'), rd.get('subject').encode('utf-8') ))
 
         # (1) Format the github issue description
         #
